@@ -1,0 +1,419 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c1a9c8a0-37ec-4abf-b118-b88066b6926f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E",
+          "mode": "list",
+          "cachedResultName": "Daily Stand-up",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2061749854,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E/edit#gid=2061749854"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "86d6a4f2-d3d6-4db1-87e7-3de32bfc84a5",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A8GyJ8gi44gyuj3h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "afdb08ab-2f66-4125-890c-5edf0c2577ea",
+              "leftValue": "Priority",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "3763e9cb-df0d-49e5-a34d-f365703ef601",
+              "leftValue": "Blockers",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "0f58ba82-ffbf-4536-8eea-0c9eab115bff",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba476044-bc09-4be7-ab07-39d0e79c3c4e",
+              "name": "Classification",
+              "value": "Needs Attention",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        -100
+      ],
+      "id": "a502fc4b-74d7-4737-b07d-2df96de36c62",
+      "name": "Set - Needs Attention"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a234e661-3d2f-48ae-a1ae-5dfe1f6b1c08",
+              "name": "Classification",
+              "value": "Normal",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        40
+      ],
+      "id": "ae68ebba-3d28-42f8-98f8-6305e8109973",
+      "name": "Set - Normal"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E",
+          "mode": "list",
+          "cachedResultName": "Daily Stand-up",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2061749854,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E/edit#gid=2061749854"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "{{ $now.toISO() }}",
+            "Name  ": "{{ $json[\"Name\"] }}",
+            "  Today’s Update  ": "{{ $json[\"Today’s Update\"] }}",
+            "  Priority  ": "{{ $json[\"Priority\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name  ",
+              "displayName": "Name  ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "  Today’s Update  ",
+              "displayName": "  Today’s Update  ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "  Blockers  ",
+              "displayName": "  Blockers  ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "  Priority  ",
+              "displayName": "  Priority  ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "  Assigned To  ",
+              "displayName": "  Assigned To  ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        900,
+        -20
+      ],
+      "id": "cd955efa-9718-4275-82b8-a5002b6db25b",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A8GyJ8gi44gyuj3h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E",
+          "mode": "list",
+          "cachedResultName": "Daily Stand-up",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2061749854,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14rZXH8XH2n1pNBqQKMkSF1LhBE-SYgCZFp6JvAmwI3E/edit#gid=2061749854"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1120,
+        -20
+      ],
+      "id": "81abd503-de1a-47d7-b590-c4bbb548c2c9",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "A8GyJ8gi44gyuj3h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD\n\nconst todayRows = items.filter(item => {\n  const timestamp = new Date(item.json.Timestamp).toISOString().split('T')[0];\n  return timestamp === today;\n});\n\nreturn todayRows.map(row => ({ json: row.json }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        -20
+      ],
+      "id": "e89b2921-20d6-441b-ba17-edf84bf45670",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "sendTo": "zowmya0@gmail.com",
+        "subject": "Daily Stand-up Summary ",
+        "message": "=<h2>📋 Daily Stand-up Summary - {{ $now.toFormat('dd MMM yyyy') }}</h2>\n\n<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse: collapse; width: 100%;\">\n  <thead style=\"background-color: #f2f2f2;\">\n    <tr>\n      <th>Name</th>\n      <th>Update</th>\n      <th>Priority</th>\n      <th>Blockers</th>\n      <th>Assigned To</th>\n    </tr>\n  </thead>\n  <tbody>\n    {{ items.map(item => {\n      const d = item.json;\n      const isHigh = d.Priority.toLowerCase() === \"high\";\n      const isBlocker = d.Blockers.toLowerCase() === \"yes\";\n\n      return `<tr style=\"${isHigh ? 'background-color:#ffe5e5;' : ''}\">\n        <td><strong>${d.Name}</strong></td>\n        <td>${d[\"Today's Update\"]}</td>\n        <td>${d.Priority}</td>\n        <td>${isBlocker ? '🚨 Yes' : 'No'}</td>\n        <td>${d[\"Assigned To\"]}</td>\n      </tr>`;\n    }).join('') }}\n  </tbody>\n</table>\n\n<br/>\n<p>✅ <strong>Legend:</strong></p>\n<ul>\n  <li>🔴 Rows in <span style=\"background-color:#ffe5e5;\">red</span> = High priority</li>\n  <li>🚨 = Blockers present</li>\n</ul>\n\n<hr/>\n<p style=\"font-size: 0.9em; color: #888;\">This email was generated automatically by n8n.</p>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1560,
+        -20
+      ],
+      "id": "f088f564-7aa1-47b7-8e4e-c900397fa11a",
+      "name": "Gmail",
+      "webhookId": "99c79793-36f5-454b-a46c-991c639e219d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZCguqmRThXjkO62U",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Set - Needs Attention",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set - Normal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Needs Attention": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Normal": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0dda887b-e338-4c84-9efc-f48113bdf578",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "af1c66b5afa6d6f2691da1beca3bf23aeb092a0bb8988a469d2a359b1a355c80"
+  },
+  "id": "NBZzfIOIs9rxdT6v",
+  "tags": []
+}
